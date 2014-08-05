@@ -1,5 +1,4 @@
 from collections import OrderedDict
-from MotorCmder import MotorCmder
 from pau2motors.msg import pau
 import ShapekeyStore
 import copy
@@ -11,7 +10,7 @@ class FaceExprPAU:
   Call msg() to get the corresponding ROS message.
   """
 
-  M_COEFFS_LEN = 48
+  M_COEFFS_LEN = 41
 
   def new_msg(self, intensity=1):
     """

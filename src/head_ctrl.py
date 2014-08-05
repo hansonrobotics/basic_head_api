@@ -77,54 +77,10 @@ class PauCtrl:
     self.pub_face = pub_face
     self.pub_neck = pub_neck
 
-
-class SpecificRobotCtrl:
-
-  def valid_exprs(self):
-    rospy.loginfo("Valid %s face expressions request.", self.robotname)
-    return {"exprnames": self.faces.keys()}
-
-  def make_face(self, exprname, intensity=1):
-    rospy.loginfo("Face request: %s of %s for %s", intensity, exprname, self.robotname)
-    for cmd in self.faces[exprname].new_msgs(intensity):
-      self.publisher.publish(cmd)
-
-  def __init__(self, robotname, publisher):
-    # Dictionary of expression names mapping to FaceExprMotors instances.
-    self.faces = FaceExpr.FaceExprMotors.from_expr_yaml(
-      read_config(robotname + "_exprs.yaml"),
-      to_dict(read_config(robotname + "_motors.yaml"), "name")
-    )
-
-    # Motor commands will be sent to this publisher.
-    self.publisher = publisher
-
-    self.robotname = robotname
-
-
 class HeadCtrl:
 
   robot_controllers = {}
 
-  def get_robot_ctrl(self, robotname):
-    """
-    Creates a new SpecificRobotCtrl instance, if the given robotname hasn't
-    been accessed yet.
-    """
-    robotctrl = self.robot_controllers.get(robotname)
-    if robotctrl == None:
-      robotctrl = SpecificRobotCtrl(robotname, self.pub_pololu)
-      self.robot_controllers[robotname] = robotctrl
-    return robotctrl
-
-  def valid_coupled_face_exprs(self, req):
-    return self.get_robot_ctrl(req.robotname).valid_exprs()
-
-  def coupled_face_request(self, req):
-    self.get_robot_ctrl(req.robotname).make_face(
-      req.expr.exprname,
-      req.expr.intensity
-    )
 
   def __init__(self):
     rospy.init_node('head_ctrl')
@@ -137,15 +93,11 @@ class HeadCtrl:
     rospy.Service("valid_face_exprs", ValidFaceExprs, 
       lambda req: self.pau_ctrl.valid_exprs()
     )
-    rospy.Subscriber("/make_face_expr", MakeFaceExpr,
+    rospy.Subscriber("make_face_expr", MakeFaceExpr,
       lambda req: self.pau_ctrl.make_face(req.exprname, req.intensity)
     )
-    rospy.Subscriber("/point_head", PointHead, self.pau_ctrl.point_head)
+    rospy.Subscriber("point_head", PointHead, self.pau_ctrl.point_head)
 
-    # Topics and services for robot-specific motor-coupled expressions.
-    self.pub_pololu = rospy.Publisher("/cmd_pololu", servo_pololu, queue_size=10)
-    rospy.Service("valid_coupled_face_exprs", ValidCoupledFaceExprs, self.valid_coupled_face_exprs)
-    rospy.Subscriber("make_coupled_face_expr", MakeCoupledFaceExpr, self.coupled_face_request)
 
 if __name__ == '__main__':
     HeadCtrl()
