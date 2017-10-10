@@ -74,6 +74,7 @@ generate_messages(
 
 generate_dynamic_reconfigure_options(
   cfg/Arms.cfg
+  cfg/Head.cfg
 )
 
 
