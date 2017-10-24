@@ -84,7 +84,7 @@ class SpecificRobotCtrl:
         expressions = rospy.get_param('expressions',{})
         expressions = OrderedDict((v.keys()[0],v.values()[0]) for k,v in enumerate(expressions))
         #Expressions to motors mapping
-        self.faces = FaceExpr.FaceExprMotors.from_expr_yaml(expressions, to_dict(motors, "name"))
+        self.faces = FaceExpr.FaceExprMotors.from_expr_yaml(expressions, motors)
         # Animation objects
         animations = rospy.get_param('animations',{})
         animations = OrderedDict((v.keys()[0],v.values()[0]) for k,v in enumerate(animations))
@@ -95,7 +95,7 @@ class SpecificRobotCtrl:
         # For example Left and Right arms can be played at same time but not two animations for same arm.
         # loaded from param server in robot config
         self.animationChannels = rospy.get_param('kf_anim_channels', [])
-        self.playback = Playback(to_dict(motors, "name"), self.publisher, self.animationChannels)
+        self.playback = Playback(motors, self.publisher, self.animationChannels)
         # Create motor publishers by robot names
         for m in motors:
             if not m['topic'] in self.publishers.keys():
