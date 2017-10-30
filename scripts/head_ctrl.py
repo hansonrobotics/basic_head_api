@@ -88,7 +88,7 @@ class SpecificRobotCtrl:
         #Gather expressions and animations from all assemblies
         for a in assemblies:
             expressions += rospy.get_param('/{}/expressions'.format(basename(a)),[])
-            animations += rospy.get_param('/{}/aninmations'.format(basename(a)),[])
+            animations += rospy.get_param('/{}/animations'.format(basename(a)),[])
         rospy.set_param('all_expressions',expressions)
         rospy.set_param('all_animations',animations)
         expressions = OrderedDict((v.keys()[0],v.values()[0]) for k,v in enumerate(expressions))
