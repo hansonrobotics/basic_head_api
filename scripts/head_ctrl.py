@@ -3,6 +3,7 @@ import os
 import yaml
 import rospy
 from collections import OrderedDict
+from os.path import basename
 from ros_pololu.msg import MotorCommand
 from pau2motors.msg import pau
 from geometry_msgs.msg import Quaternion
@@ -81,12 +82,20 @@ class SpecificRobotCtrl:
             motors = rospy.get_param('/' + robot_name + '/motors')
         else:
             motors = rospy.get_param('motors')
+        assemblies = rospy.get_param('/assemblies')
         expressions = rospy.get_param('expressions',{})
+        animations = rospy.get_param('animations',{})
+        #Gather expressions and animations from all assemblies
+        for a in assemblies:
+            expressions += rospy.get_param('/{}/expressions'.format(basename(a)),[])
+            animations += rospy.get_param('/{}/animations'.format(basename(a)),[])
+        rospy.set_param('all_expressions',expressions)
+        rospy.set_param('all_animations',animations)
         expressions = OrderedDict((v.keys()[0],v.values()[0]) for k,v in enumerate(expressions))
         #Expressions to motors mapping
-        self.faces = FaceExpr.FaceExprMotors.from_expr_yaml(expressions, to_dict(motors, "name"))
+        self.faces = FaceExpr.FaceExprMotors.from_expr_yaml(expressions, motors)
         # Animation objects
-        animations = rospy.get_param('animations',{})
+
         animations = OrderedDict((v.keys()[0],v.values()[0]) for k,v in enumerate(animations))
         self.animations = Animation.from_yaml(animations)
         # Motor commands will be sent to this publisher.
@@ -95,9 +104,9 @@ class SpecificRobotCtrl:
         # For example Left and Right arms can be played at same time but not two animations for same arm.
         # loaded from param server in robot config
         self.animationChannels = rospy.get_param('kf_anim_channels', [])
-        self.playback = Playback(to_dict(motors, "name"), self.publisher, self.animationChannels)
+        self.playback = Playback(motors, self.publisher, self.animationChannels)
         # Create motor publishers by robot names
-        for m in motors:
+        for m in motors.values():
             if not m['topic'] in self.publishers.keys():
                 # Pololu motor if motor_id is specified
                 if m['hardware'] == 'pololu':
