@@ -5,7 +5,7 @@ import rospy
 from collections import OrderedDict
 from os.path import basename
 from ros_pololu.msg import MotorCommand
-from pau2motors.msg import pau
+from hr_msgs.msg import pau
 from geometry_msgs.msg import Quaternion
 from pi_face_tracker.msg import Faces
 from std_msgs.msg import String
