@@ -4,10 +4,10 @@ import yaml
 import rospy
 from collections import OrderedDict
 from os.path import basename
-from ros_pololu.msg import MotorCommand
-from hr_msgs.msg import pau
 from geometry_msgs.msg import Quaternion
-from pi_face_tracker.msg import Faces
+from hr_msgs.msg import Faces
+from hr_msgs.msg import MotorCommand
+from hr_msgs.msg import pau
 from std_msgs.msg import String
 from std_msgs.msg import Float64
 import time
