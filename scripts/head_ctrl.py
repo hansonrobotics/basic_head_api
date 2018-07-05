@@ -83,8 +83,8 @@ class SpecificRobotCtrl:
         else:
             motors = rospy.get_param('motors')
         assemblies = rospy.get_param('/assemblies')
-        expressions = rospy.get_param('expressions',{})
-        animations = rospy.get_param('animations',{})
+        expressions = rospy.get_param('expressions', [])
+        animations = rospy.get_param('animations', [])
         #Gather expressions and animations from all assemblies
         for a in assemblies:
             expressions += rospy.get_param('/{}/expressions'.format(basename(a)),[])
