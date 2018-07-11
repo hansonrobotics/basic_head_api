@@ -12,7 +12,7 @@ from basic_head_api.animation import Animation
 from basic_head_api.playback import Playback
 from basic_head_api.srv import *
 from geometry_msgs.msg import Quaternion
-from hr_msgs.msg import PointHead, PlayAnimation, MotorCommand, pau
+from hr_msgs.msg import PointHead, PlayAnimation, MotorCommand, pau, MakeFaceExpr
 from std_msgs.msg import Float64, String
 
 def to_dict(list, key):
