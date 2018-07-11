@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
 import random
-import rospy
-from std_msgs.msg import String
 import dynamic_reconfigure.client
-from dynamic_reconfigure.server import Server
+import rospy
+
 from basic_head_api.cfg import ArmsConfig
-from basic_head_api.msg import PlayAnimation
 from basic_head_api.srv import *
+from dynamic_reconfigure.server import Server
+from hr_msgs.msg import PlayAnimation
+from std_msgs.msg import String
 
 class ArmsAlive:
     def __init__(self):

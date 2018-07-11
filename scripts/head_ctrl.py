@@ -1,23 +1,19 @@
 #!/usr/bin/env python
 import os
 import yaml
-import rospy
 from collections import OrderedDict
 from os.path import basename
-from geometry_msgs.msg import Quaternion
-from hr_msgs.msg import Faces
-from hr_msgs.msg import MotorCommand
-from hr_msgs.msg import pau
-from std_msgs.msg import String
-from std_msgs.msg import Float64
 import time
 
+import rospy
 from basic_head_api import FaceExpr
+from basic_head_api import Quat
 from basic_head_api.animation import Animation
 from basic_head_api.playback import Playback
 from basic_head_api.srv import *
-from basic_head_api.msg import *
-from basic_head_api import Quat
+from geometry_msgs.msg import Quaternion
+from hr_msgs.msg import PointHead, PlayAnimation, MotorCommand, pau
+from std_msgs.msg import Float64, String
 
 def to_dict(list, key):
     result = {}
