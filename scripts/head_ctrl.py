@@ -12,7 +12,7 @@ from basic_head_api.animation import Animation
 from basic_head_api.playback import Playback
 from basic_head_api.srv import *
 from geometry_msgs.msg import Quaternion
-from hr_msgs.msg import PointHead, PlayAnimation, MotorCommand, pau, MakeFaceExpr
+from hr_msgs.msg import PointHead, PlayAnimation, MotorCommand, pau, MakeFaceExpr, TargetPosture
 from std_msgs.msg import Float64, String
 
 def to_dict(list, key):
@@ -51,12 +51,13 @@ class SpecificRobotCtrl:
             rospy.logerr("Cant find expression {}".format(exprname))
 
     def publisher(self, cmd):
-        (cmd.joint_name, pubid) = cmd.joint_name.split('@')
-        # Maximum speed for visimes
-
+        (cmd.joint_name, pubid, hardware) = cmd.joint_name.split('@')
         # Dynamixel commands only sends position
-        if self.publishers[pubid].type == 'std_msgs/Float64':
-            self.publishers[pubid].publish(cmd.position)
+        if hardware == 'dynamixel':
+            t = TargetPosture()
+            t.names.append(cmd.joint_name)
+            t.values.append(cmd.position)
+            self.publishers['dynamixels'].publish(t)
         else:
             self.publishers[pubid].publish(cmd)
 
@@ -71,13 +72,14 @@ class SpecificRobotCtrl:
             return AnimationLengthResponse(0)
 
     def __init__(self):
-        # Wait for motors to be loaded in param server
-        time.sleep(3)
-        robot_name = rospy.get_param('/robot_name')
-        if robot_name:
-            motors = rospy.get_param('/' + robot_name + '/motors')
-        else:
+        # Wait for certain amount of time motors to be loaded in param server
+        for i in range(1,20):
+            if not rospy.get_param('motors_init', False):
+                time.sleep(1)
+                continue
             motors = rospy.get_param('motors')
+            break
+
         assemblies = rospy.get_param('/assemblies')
         expressions = rospy.get_param('expressions', [])
         animations = rospy.get_param('animations', [])
@@ -102,14 +104,14 @@ class SpecificRobotCtrl:
         self.animationChannels = rospy.get_param('kf_anim_channels', [])
         self.playback = Playback(motors, self.publisher, self.animationChannels)
         # Create motor publishers by robot names
+        self.publishers['dynamixels'] = rospy.Publisher("dynamixels",TargetPosture, queue_size=100)
         for m in motors.values():
+            if not 'topic' in m:
+                continue
             if not m['topic'] in self.publishers.keys():
                 # Pololu motor if motor_id is specified
                 if m['hardware'] == 'pololu':
                     self.publishers[m['topic']] = rospy.Publisher(m['topic']+"/command",MotorCommand, queue_size=30)
-                else:
-                    self.publishers[m['topic']] = rospy.Publisher(m['topic']+"_controller/command",Float64, queue_size=30)
-
 
 class HeadCtrl:
 
