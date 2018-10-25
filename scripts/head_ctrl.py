@@ -77,9 +77,8 @@ class SpecificRobotCtrl:
             if not rospy.get_param('motors_init', False):
                 time.sleep(1)
                 continue
-            motors = rospy.get_param('motors')
             break
-
+        motors = rospy.get_param('motors')
         assemblies = rospy.get_param('/assemblies')
         expressions = rospy.get_param('expressions', [])
         animations = rospy.get_param('animations', [])
