@@ -1,3 +1,4 @@
+# Copyright (c) 2013-2018 Hanson Robotics, Ltd, all rights reserved 
 __author__ = 'vytas'
 from threading import Timer, Lock, ThreadError
 from time import time, sleep

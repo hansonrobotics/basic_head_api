@@ -1,3 +1,4 @@
+# Copyright (c) 2013-2018 Hanson Robotics, Ltd, all rights reserved 
 from math import sin,cos,atan2,asin
 
 class Quat():
