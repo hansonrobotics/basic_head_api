@@ -1,3 +1,4 @@
+# Copyright (c) 2013-2018 Hanson Robotics, Ltd, all rights reserved. 
 #basic_head_api
 Allows to use static expressions with the intensity level. Used to define and control visimes
 

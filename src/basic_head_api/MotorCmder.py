@@ -1,3 +1,4 @@
+# Copyright (c) 2013-2018 Hanson Robotics, Ltd, all rights reserved 
 from hr_msgs.msg import MotorCommand
 
 class MotorCmder:
