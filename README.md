@@ -1,4 +1,3 @@
-# Copyright (c) 2013-2018 Hanson Robotics, Ltd, all rights reserved. 
 #basic_head_api
 Allows to use static expressions with the intensity level. Used to define and control visimes
 
@@ -7,7 +6,7 @@ Allows to use static expressions with the intensity level. Used to define and co
 + dynamixel-msgs
 + hansonrobotics/pau2motors
 
-### Configuration 
+### Configuration
 Uses following params from param server (within same namespace) for configuration:
 + `expressions` : see [expressions.yaml](https://github.com/hansonrobotics/robots_config/blob/master/han/expressions.yaml)
 + `motors` : see [motors.yaml](https://github.com/hansonrobotics/robots_config/blob/master/han/motors.yaml)
@@ -29,4 +28,4 @@ Uses following params from param server (within same namespace) for configuratio
   available face expression strings for use in **MakeFaceExpr.msg**.
 
 
-
+# Copyright (c) 2013-2018 Hanson Robotics, Ltd, all rights reserved.
